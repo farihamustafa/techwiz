@@ -22,14 +22,19 @@ class _MyHeaderDrawerState extends State<MyHeaderDrawer> {
             margin: EdgeInsets.only(bottom: 10),
             height: 70,
             decoration: BoxDecoration(
-                color: Colors.black,
                 shape: BoxShape.circle,
                 image: DecorationImage(
                   image: AssetImage('assets/images/shirt.webp'),
                 )),
           ),
-          Text("Hello"),
-          Text("hello 2")
+          Text(
+            "Hello",
+            style: TextStyle(color: Colors.white),
+          ),
+          Text(
+            "hello 2",
+            style: TextStyle(color: Colors.white),
+          )
         ],
       ),
     );
