@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/Contact.dart';
-import 'package:myapp/CustomAppbar.dart';
-import 'package:myapp/Dashboard.dart';
+import 'package:myapp/CustomApp.dart';
 import 'package:myapp/MyDrawer.dart';
 
 class Homescreen extends StatefulWidget {
@@ -15,7 +13,7 @@ class _HomescreenState extends State<Homescreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: Customappbar(),
+        appBar: CustomAppBar(),
         body: Container(
             child: Center(
           child: Text("Home Page"),
