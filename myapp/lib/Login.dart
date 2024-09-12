@@ -1,52 +1,51 @@
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
+class ECommerceLoginPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _ECommerceLoginPageState createState() => _ECommerceLoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _ECommerceLoginPageState extends State<ECommerceLoginPage>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
-  bool _isLoading = false;
-  String? _email;
-  String? _password;
+  late AnimationController _controller;
+  late Animation<Offset> _slideAnimation;
 
-  void _login() {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
-
-      // Simulate a network request
-      Future.delayed(Duration(seconds: 3), () {
-        setState(() {
-          _isLoading = false;
-        });
-
-        // Perform login logic here
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login Successful!')),
-        );
-      });
-    }
+  // Initialize Animation
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    _slideAnimation = Tween<Offset>(begin: Offset(3, 0), end: Offset(0, 0))
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _controller.forward();
   }
 
-  String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  String? validateEmail(String value) {
+    if (value.isEmpty) {
       return 'Please enter your email';
     }
-    final emailRegExp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-    if (!emailRegExp.hasMatch(value)) {
+    final RegExp emailRegex =
+        RegExp(r'^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
+    if (!emailRegex.hasMatch(value)) {
       return 'Please enter a valid email';
     }
     return null;
   }
 
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
+  String? validatePassword(String value) {
+    if (value.isEmpty) {
       return 'Please enter your password';
-    }
-    if (value.length < 6) {
+    } else if (value.length < 6) {
       return 'Password must be at least 6 characters';
     }
     return null;
@@ -56,89 +55,87 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
-        fit: StackFit.expand,
         children: [
-          // Background Image
-          Image.asset(
-            'assets/background.jpg', // Add a background image in assets
-            fit: BoxFit.cover,
-          ),
-          // Blur effect on the background
+          // Background color
           Container(
-            color: Colors.black.withOpacity(0.3),
+            decoration: BoxDecoration(
+                // gradient: LinearGradient(
+                //   colors: [Colors.blue.shade200, Colors.purple.shade600],
+                //   begin: Alignment.topLeft,
+                //   end: Alignment.bottomRight,
+                image: DecorationImage(
+                    image: AssetImage('assets/images/shirt.webp'),
+                    fit: BoxFit.cover)),
           ),
+          // Login Form
           Center(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: AnimatedContainer(
-                  duration: Duration(milliseconds: 500),
-                  curve: Curves.easeInOut,
-                  padding: EdgeInsets.all(32.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(16.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 10.0,
-                        offset: Offset(0, 4),
+            child: Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: SlideTransition(
+                position: _slideAnimation,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'Login to E-Commerce',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          filled: true,
+                          fillColor: Colors.white.withOpacity(0.8),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          prefixIcon: Icon(Icons.email),
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) => validateEmail(value!),
+                      ),
+                      SizedBox(height: 20),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          filled: true,
+                          fillColor: Colors.white.withOpacity(0.8),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          prefixIcon: Icon(Icons.lock),
+                        ),
+                        obscureText: true,
+                        validator: (value) => validatePassword(value!),
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Logging In...')),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.indigo.shade600,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 100, vertical: 15),
+                        ),
+                        child: Text('Login',
+                            style:
+                                TextStyle(fontSize: 18, color: Colors.white)),
                       ),
                     ],
-                  ),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Login',
-                          style: TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 16.0),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Email',
-                            border: OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.email),
-                          ),
-                          keyboardType: TextInputType.emailAddress,
-                          validator: _validateEmail,
-                          onSaved: (value) => _email = value,
-                        ),
-                        SizedBox(height: 16.0),
-                        TextFormField(
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            border: OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.lock),
-                          ),
-                          validator: _validatePassword,
-                          onSaved: (value) => _password = value,
-                        ),
-                        SizedBox(height: 24.0),
-                        _isLoading
-                            ? CircularProgressIndicator()
-                            : SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: _login,
-                                  style: ElevatedButton.styleFrom(
-                                    padding:
-                                        EdgeInsets.symmetric(vertical: 16.0),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                  ),
-                                  child: Text('Login'),
-                                ),
-                              ),
-                      ],
-                    ),
                   ),
                 ),
               ),

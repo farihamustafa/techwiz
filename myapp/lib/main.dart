@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/HomeScreen.dart';
 import 'package:myapp/Login.dart';
+import 'package:myapp/draggablesheet.dart';
 import 'package:myapp/signup.dart';
 
 void main() {
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'my app',
       debugShowCheckedModeBanner: false,
-      home: SignupPage(),
+      home: DraggableScrollableSheetExample(),
     );
   }
 }

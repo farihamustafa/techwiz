@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/Contact.dart';
 import 'package:myapp/Dashboard.dart';
-import 'package:myapp/HomeScreen.dart';
+import 'package:myapp/Login.dart';
+import 'package:myapp/draggablesheet.dart';
+import 'package:myapp/signup.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -44,16 +46,6 @@ class MyDrawer extends StatelessWidget {
               child: Column(
                 children: [
                   ListTile(
-                    leading: Icon(Icons.home_filled),
-                    title: Text("Home"),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Homescreen()));
-                    },
-                  ),
-                  ListTile(
                     leading: Icon(Icons.dashboard),
                     title: Text("Dashboard"),
                     onTap: () {
@@ -73,7 +65,41 @@ class MyDrawer extends StatelessWidget {
                           MaterialPageRoute(
                               builder: (context) => ContactScreen()));
                     },
-                  )
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.details),
+                    title: Text("Contact"),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  DraggableScrollableSheetExample()));
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.login),
+                    title: Text("Login"),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ECommerceLoginPage()));
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.login),
+                    title: Text("Sign up"),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignupPage()));
+                    },
+                  ),
                 ],
               ),
             )
